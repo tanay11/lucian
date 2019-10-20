@@ -7,7 +7,7 @@ export default class CartList extends Component {
     return (
       <div className="container-fluid">
         {cart.map(item => (
-           item.length > 1 ? item.map(color=>(
+           Array.isArray(item) ? item.map(color=>(
             <CartItem key={color.id} item={color} value={value} />
           )):
           <CartItem key={item.id} item={item} value={value} />

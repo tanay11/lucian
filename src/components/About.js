@@ -39,10 +39,26 @@ export class About extends Component {
     return (
       <div style={{padding:'2rem 0'}}>
          <Bar> About Lucian Paints
-        <ExpBut color="primary" onClick={this.toggle}><Expand className="carticon"/></ExpBut>
+        <ExpBut color="primary" onClick={this.toggle}><Expand className="largeicon"/></ExpBut>
         <Collapse style={{margin:'2rem'}} isOpen={this.state.collapse}>
           <Card style={{padding:'0 2rem'}}>
             <CardBody>
+              <Features>Lucian Paints </Features>
+              <p>Lucian Paints Indore is a manufacturing unit established by experts
+                 especially Decorative Paints over the period of 3 Yrs in 2017. Experts from renowned firms of Rajasthan,
+                  Maharashtra and Madhya Pradesh respectively Shreenath Agency Udaipur,
+                   Lucian Paints Indore and A7 Enterprises Nashik. 
+                Lucian Paints products are Lead free and Eco-Friendly water based products as per norms.</p>
+
+                Lucian Paints started production aiming providing “Quality paints products in reasonable prices” to its customer & industry needs with outperformance quality and durability in Pan India. Currently we are widespread in the state of Madhya Pradesh, Maharashtra, Gujarat and Rajasthan location; Okha, western Madhya Pradesh, Nashik, Nagpur, Kolhapur, Udaipur and southern part of Rajasthan. Chattisgarh, central & eastern Madhya Pradesh products will be available for customers through Distribution and Dealers networks.
+
+Currently Lucian Paints focusing on the 3 products Cement based water primer, Luxury Silky Emulsions (Plastic) and Dark Shades in the premium and shine quality. Though we have other premium quality products like; Distemper, wall putty, premium emulsions etc. Post Diwali Lucian Paints will come up with segment in Enamel both oil & water based. 
+<br/>
+<br/>
+<p className="center">For more Details Visit</p>
+<p className="center"> <a href="https://drive.google.com/open?id=1vzK4YvK5LXyXzgvf5D1-vf2OP1QhEGpu">lucianpaintsdetails.info</a></p>
+<br/>
+
             <Features>Better Performance</Features>
                 <p>
                 Lucian Paint offers excellent resistance to chalking, cracking
@@ -64,10 +80,7 @@ proves more economical in the long run. It also does
 not require curing and therefore saves time, effort
 and money during.
 </p>
-<Features>Better Anti-algal Performance</Features>
-<p>ACE provides better anti-algal protection than
-cement paint especially in dry to moderately humid
-climatic conditions.</p>
+
             <hr/>  
 <ul>              
 <li>Contact Address: Operating Address: Office: House No. 407, Near Raigarh Chowk, Pavan Nagar Area, CIDCO, Nashik, MH - 422009</li>

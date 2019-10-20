@@ -4,16 +4,32 @@ import { ButtonContainer } from "./Button";
 import { Link } from "react-router-dom";
 import { storeProducts } from "../data";
 import styled from "styled-components";
+
+const WrapperContainer=styled.div`
+  @media (max-width: 576px) {
+    width:1170px;
+  } 
+`
+
 export default class Details extends Component {
   constructor(props) {
     super(props);
+    this.state={
+      size:false
+    }
     this.clicked=false;
+    this.size=false;
     // This binding is necessary to make `this` work in the callback
     this.handlePress = this.handlePress.bind(this);
   }
   
   handlePress(){
     this.clicked=true;
+  }
+  sizeIsSelected=()=>{
+    this.setState({
+      size:true
+    })
   }
 
   
@@ -45,10 +61,12 @@ export default class Details extends Component {
             rang
           } = this.props.newProduct;
           
-
+          const {key=0}=value.key
           return (
+            <WrapperContainer>
             <div className="container py-5">
               {console.log("ab update hua",value.newProduct)}
+              {console.log("key",value.key)}
               {/* title */}
               <div className="row">
                 <div className="col-10 mx-auto text-center text-slanted text-blue my-5">
@@ -66,17 +84,18 @@ export default class Details extends Component {
                   {types &&
                   <p> 
                   <label>
-                  <input type="radio" name={id} value="Interior" onClick={value.handleSelectedType} checked={value.selectedType=="Interior"}/>Interior
-                  </label>
-                  <label> <input type="radio" name={id} value="Exterior" onClick={value.handleSelectedType} checked={value.selectedType=="Exterior"}/>Exterior
+                  <input type="radio" name={id} value="Interior" onClick={value.handleSelectedType} checked={value.selectedType=="Interior"}/>{id == 9 || id==10 ? "Shine":"Interior"}
+                  </label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                  <label> <input type="radio" name={id} value="Exterior" onClick={value.handleSelectedType} checked={value.selectedType=="Exterior"}/>{id == 9 || id==10 ? "Premium":"Exterior"}
                   </label>
                   </p>
                   }
                   <p className="text-capitalize font-weight-bold mt-3 mb-0">
-                   {id==8?<h3>Please Select Minimum 6 shades</h3>: <h3>Do you want to add Shades in your colour</h3>}
+                   {id==10 || id==9 ?<div><h3>Please Select Minimum 6 shades (You can choose multiple colours)</h3><br/>
+                   <p>Customisation Available (For more details Dial 8007646656 )</p></div>: <h3>Do you want to add Shades in your colour</h3>}
                 <br/>
                 <div onClick={this.handlePress}>
-                  <button className={`${rang ? rang[rang.length-1]=="Narangi"?'button-active':'my-button':'my-button'}`} value="Narangi" onClick={value.handleColor}>
+                  <button className={`${rang ? rang[rang.length-1]=="Narangi"?'button-active':'my-button':'my-button'}`} name="red" value="Narangi" onClick={value.handleColor}>
                   <img src="img/narangi.png" className="img-fluid" alt="" />
                   </button> &nbsp;&nbsp;&nbsp;&nbsp;
                   <button className={`${rang ? rang[rang.length-1]=="GreenGold"?'button-active':'my-button':'my-button'}`} value="GreenGold" onClick={value.handleColor}>
@@ -129,12 +148,29 @@ export default class Details extends Component {
                   <br/>
                   <br/>
                   <h4><i>Available Sizes</i></h4>
-                  {Availability.map(item=>{
+                  <div onClick={this.sizeIsSelected}>
+                  {
+                    id == 9 || id==10 ?
+                    Availability.map(item=>{
+                      return (<div><label><input type="radio" title={item.key} name="Size" value={item.size} onClick={(event)=>{value.handleSize(event,true)}}/>
+                      {item.size}</label></div>);
+                    }):
+                    Availability.map(item=>{
                     return (<div><label><input type="radio" title={item.key} name="Size" value={item.size} onClick={value.handleSize}/>
                     {item.size}</label></div>);
-                  })}
+                  })
+                  }
+                  </div>
                   <br/>
                   </p>
+                  <br/>
+                  {value.key?
+                    <p className="text-capitalize font-weight-bold mt-3 mb-0">
+                    Price&nbsp; :&nbsp;  ₹ &nbsp;&nbsp;
+                    <span className="text-muted lead">{Availability[key].price}</span>
+                  </p> :null
+                  }
+                  <br/>
                   <p className="text-capitalize font-weight-bold mt-3 mb-0">
                     some info about product :
                   </p>
@@ -144,25 +180,24 @@ export default class Details extends Component {
                     <Link to="/">
                       <ButtonContainer>back to products</ButtonContainer>
                     </Link>
+                    {this.state.size?
                     <ButtonContainer
-                      cart
-                      disabled={inCart ? true : false}
                       onClick={() => {
-                        if( id !=8 ){
+                        if( id !=9 && id != 10 && !this.clicked){
                         value.addToCart(id);}
                         value.openModal(id);
                         if(this.clicked){
-                          id==8?value.generateMultipleShade():
+                          id==10 || id==9 ?value.generateMultipleShade():
                           value.generateShade(id)
                         }
-                      }}
-                    >
-                      {inCart ? "in cart" : "add to cart"}
-                    </ButtonContainer>
+                      }}>
+                      {inCart ? "Add more" : "add to cart"}
+                    </ButtonContainer>:null}
                   </div>
                 </div>
               </div>
             </div>
+            </WrapperContainer>
           );
         }}
       </ProductConsumer>

@@ -22,8 +22,10 @@ class ProductProvider extends Component {
       emailId:"",
       name:"",
       selectedSize:"",
-      key:3,
-      rang:[]
+      key:0,
+      rang:[],
+      discount:0,
+      homeColor:""
     }
   
   componentDidMount() {
@@ -49,7 +51,8 @@ class ProductProvider extends Component {
 
   handleColor=(e)=>{
     this.setState({
-      rang: [...this.state.rang, e.currentTarget.value]
+      rang: [...this.state.rang, e.currentTarget.value],
+      homeColor:e.currentTarget.name
     },()=>{console.log("EveryTime I set cOLOR",this.state.rang)})
     //()=>{this.len=this.state.rang.length}
     }
@@ -76,16 +79,27 @@ class ProductProvider extends Component {
       return { products };
     }, this.checkCartItems);
   };
-  handleSize=(event)=>{
-    this.setState({
-      selectedSize: event.target.value,
-      key:(event.target.title-1)
-  })  
-  }
-  getRegistered=(user)=>{
-    this.setState({
-      isRegistered:user
+  handleSize=(event,color)=>{
+    if(color){
+      this.setState({
+        selectedSize: "1Lit * 6 Boxes",
+        key:0
     })
+    }
+    else{
+      this.setState({
+        selectedSize: event.target.value,
+        key:(event.target.title-1)
+    }) 
+    }
+     
+  }
+  getRegistered=(arg)=>{
+    
+    this.setState({
+      isRegistered:arg
+    })
+
     console.log("isregister ",this.state.isRegistered)
   }
 
@@ -97,7 +111,7 @@ class ProductProvider extends Component {
     console.log("Product ",product)
     if(product.types){
       this.setState({
-          newProduct: product[this.state.selectedType] ,
+          newProduct: product[product.specify] ,
           selectedType:product.specify
       });
     }
@@ -114,14 +128,13 @@ class ProductProvider extends Component {
     this.setState({
         name: e.target.value
     });
+    
 }
   onChangeEmail=(e)=> {
     this.setState({
         emailId: e.target.value
     });
   
-  
-    console.log("Registered email flow",this.state.emailId)
 }
 
 generateMultipleShade= ()=>{
@@ -131,12 +144,15 @@ generateMultipleShade= ()=>{
   let colours=[];
   colours=[...this.state.rang]
   const arr=Object.values(tempShades)
+  console.log("Inside generate shade",this.state.selectedType)
   colours.map((shadeSelected)=>{
     var f;
     var found = arr.some(function(item, index) { f = index; return item.color == shadeSelected; });
     const shade=tempShades[f]
     shade.incart=true;
-    const price=shade.price
+    console.log("shade",shade)
+    console.log("shade[this.state.selectedType].price",shade[this.state.selectedType].price)
+    const price=shade[this.state.selectedType].price
     shade.count=1
     shade.total=price
     cartShades.push(shade)
@@ -152,6 +168,7 @@ generateMultipleShade= ()=>{
 
 
   generateShade= (id)=>{
+    console.error("iske andar aaya hi nahi")
     const tempShades={...this.state.shades}  
     const colours=this.state.rang[this.state.rang.length-1];
     const arr=Object.values(tempShades)
@@ -168,6 +185,7 @@ generateMultipleShade= ()=>{
     const cost=product.Availability[this.state.key].price;
     product.price=cost;
     product.total = cost;
+    product.size=this.state.selectedSize;
     this.setState(()=>{
     return {
     cart:[...this.state.cart,product,shade],
@@ -180,11 +198,14 @@ generateMultipleShade= ()=>{
   addToCart = id => {
     let tempProducts = [...this.state.products];
     const product = this.getItem(id);
+    console.log("Jo product aa rae",product)
+    console.log("")
     product.inCart = true;
     product.count = 1;
     const amt = product.Availability[this.state.key].price;
     product.price=amt;
     product.total = amt;
+    product.size=this.state.selectedSize;
 
     this.setState(() => {
       return {
@@ -220,6 +241,32 @@ generateMultipleShade= ()=>{
       };
     }, this.addTotals);
   };
+
+  incrementShade = id => {
+    let tempObj = [...this.state.cart];
+    let j=null;
+    tempObj.map((item,i)=>{
+      if(Array.isArray(item)){
+        j=i;
+      }
+    }
+    )
+    let tempCart=tempObj[j];
+    
+    const selectedProduct = tempCart.find(element => {
+      return element.item.id === id;
+    });
+    const index = tempCart.indexOf(selectedProduct);
+    const product = tempCart[index];
+    product.count = product.count + 1;
+    product.total = product.count * product.price;
+    this.setState(() => {
+      return {
+        cart: [...tempCart]
+      };
+    }, this.addTotals);
+  };
+
   decrement = id => {
     let tempCart = [...this.state.cart];
     const selectedProduct = tempCart.find(item => {
@@ -237,6 +284,35 @@ generateMultipleShade= ()=>{
       }, this.addTotals);
     }
   };
+
+  decrementShade = id => {
+    let tempObj = [...this.state.cart];
+    let j=null;
+    tempObj.map((item,i)=>{
+      if(Array.isArray(item)){
+        j=i;
+      }
+    }
+    )
+    let tempCart=tempObj[j];
+    const selectedProduct = tempCart.find(element => {
+      return element.id === id;
+    });
+    const index = tempCart.indexOf(selectedProduct);
+    const product = tempCart[index];
+    product.count = product.count - 1;  
+    if (product.count === 0) {
+      this.removeShade(id);
+      tempCart.splice(index,1)
+        } 
+    product.total = product.count * product.price;
+    this.setState(() => {
+      return {
+        cart: [...tempCart]
+      };
+    }, this.addTotals);
+  };
+
   getTotals = () => {
     // const subTotal = this.state.cart
     //   .map(item => item.total)
@@ -247,7 +323,7 @@ generateMultipleShade= ()=>{
     let subTotal = 0;
     console.log("Cart at Total",this.state.cart)
     this.state.cart.map(item =>
-      item.length > 1 ? item.map(
+      Array.isArray(item) ? item.map(
         color=>( 
           (subTotal += color.total) )
       ):
@@ -255,20 +331,51 @@ generateMultipleShade= ()=>{
     const tempTax = subTotal * 0.18;
     const tax = parseFloat(tempTax.toFixed(2));
     const total = subTotal + tax;
+    let disc=0;
+
+    switch(true){
+      case total>=5000:{
+        console.log("Ab ye case kyun ni chal raha")
+        disc=0.05*total
+        
+      break;
+      }
+      case total>=10000:{
+        disc=0.10*total
+       
+      break;
+      }
+      case total>=20000:{
+        disc=0.20*total
+       
+      break;
+      }
+      
+   }
+   this.setState({
+     discount:disc
+   })
+   const amount=total-disc
+   console.log("discount",this.state.dis,disc)
+
     return {
       subTotal,
       tax,
-      total
+      amount
     };
   };
   addTotals = () => {
     const totals = this.getTotals();
+    console.log("Totasls",totals)
+    
+
+
     this.setState(
       () => {
         return {
           cartSubTotal: totals.subTotal,
           cartTax: totals.tax,
-          cartTotal: totals.total
+          cartTotal: totals.amount
         };
       },
       () => {
@@ -298,23 +405,23 @@ generateMultipleShade= ()=>{
   removeShade= id => {
     let tempShades = [...this.state.shades];
     let tempCart = [...this.state.cart];
-    var f;
-    var found = tempShades.some(function(item, index) { f = index; return item.id == id; });
-    let removedProduct=tempShades[f]
-    removedProduct.inCart = false;
-    removedProduct.count = 0;
-    removedProduct.total = 0;
-
-    tempCart = tempCart.filter(item => {
-      return item.id !== id;
-    });
-
-    this.setState(() => {
-      return {
-        cart: [...tempCart],
-        shades: [...tempShades]
-      };
-    }, this.addTotals);
+    tempCart.map((item,i)=>{
+          if(Array.isArray(item)){
+            var f;
+            let removalArr=tempCart[i]
+            var found = removalArr.some(function(item, index) { f = index; return item.id == id; });
+            removalArr.splice(f,1)
+            tempCart[i]=removalArr;
+            
+            this.setState(() => {
+              return {
+                cart: [...tempCart],
+                shades: [...tempShades]
+              };
+            }, this.addTotals);
+          }
+        })
+    
   };
   clearCart = () => {
     this.setState(
@@ -344,7 +451,9 @@ generateMultipleShade= ()=>{
           closeModal: this.closeModal,
           setName:this.setName,
           increment: this.increment,
+          incrementShade:this.increment,
           decrement: this.decrement,
+          decrementShade:this.decrementShade,
           removeItem: this.removeItem,
           clearCart: this.clearCart,
           removeShade:this.removeShade,

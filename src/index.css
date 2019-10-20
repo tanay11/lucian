@@ -12,10 +12,7 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
-.wrapper-container{
-  width:100%;
-  overflow-x:hidden; 
-}
+
 
 .product-list-container{
 max-width: 1140px;
@@ -32,6 +29,11 @@ max-width: 1140px;
     height:80px;
     width:100px;
 }
+.imageBtn{
+  border: 2px solid rgb(116, 119, 119);
+border-radius: 5px 0px;
+  background: grey;
+}
 
 .myImage{
   width: 100%;
@@ -40,9 +42,10 @@ max-width: 1140px;
 }
 
 .icon{
-  width:8%;
-  height: 2%;
-  fill:#c5e60fde;
+  width: 8%;
+    height: 2%;
+    fill: #c5e60fde;
+    transform: translate(30px, 0px);
 }
 
 .toolbar {
@@ -53,12 +56,53 @@ max-width: 1140px;
   height: 10%;
   background-color: darkslateblue;
 }
-
+/* 
 .carticon{
   width:15%;
   height:2%;
+} */
+.center{
+  text-align: center;
+  color: brown;
 }
 
+.menuicon{
+  width:7%;
+  height:2%;
+  fill: cornflowerblue;
+}
+.largeicon{
+  width: 11%;
+  height:2%
+}
+
+
+.cart-row{
+  display: flex;
+  flex-wrap: nowrap;
+  margin-right: -15px;
+  margin-left: -15px;
+
+}
+
+.cart-btn{
+  display: inline-block;
+  font-weight: 400;
+  color: #212529;
+  text-align: center;
+  vertical-align: middle;
+  background-color: transparent;
+  border: 2px solid brown;
+  padding: .375rem .75rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  margin: 0.375rem;
+    cursor: pointer;
+    text-transform: uppercase;
+    white-space: normal;
+    word-wrap: break-word;
+    color: inherit;
+}
 .logo-link{
   margin-right:0px;
 }
@@ -67,27 +111,22 @@ max-width: 1140px;
   background-color: white;
 }
 
-.Lucian-img{
-  max-width: 36%;
-  height: auto;
-}
 .nav-btn{
   border: none;
     background: none;
-    color: #7d7dde;
-    
+    color: #7d7dde;   
 }
 .nav-btn.active{
     font-size: 20px;
   }
 .nav-icons{
   display:flex;
-  margin-top: 2rem;
+  margin-top: 1rem;
   margin-right: 3rem;
+  margin-bottom: 15px;
 }
-.footerClass{
-  z-index: 0;
-}
+
+
 
 /* .header{
   background-color: "#00BFFF";

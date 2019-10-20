@@ -25,4 +25,7 @@ export const ButtonContainer = styled.button`
   &:focus {
     outline: none;
   }
+  &:disabled {
+    opacity: 0.4;
+  }
 `;

@@ -5,10 +5,15 @@ import axios from 'axios';
 
 const PaymentDiv=styled.div`
 background-image: url(${props => props.ImagePath});
+background-repeat: no-repeat;
 margin: 10% 30%;
 text-align: center;
 border: 1px solid blue;
 padding: 10% 0;
+@media (max-width: 576px) {
+  width:1170px;
+  margin: 0px;
+} 
 `
 
 export default class Payment extends Component {
@@ -28,7 +33,8 @@ export default class Payment extends Component {
         location:'',
         completeAddress:'',
         zipcode:'',
-        product:[]
+        product:[],
+        yes:false
     }
 }
 
@@ -36,6 +42,18 @@ export default class Payment extends Component {
 componentDidMount() {
     this.getUser()
 }
+
+onChangeContact(e) {
+  this.setState({
+    completeAddress: e.target.value
+  });
+}
+handleDelivery=()=>{
+  this.setState({
+    yes:true
+  })
+}
+
 getUser=()=>{
 console.log("this.props.email",this.email)
   axios.get('http://localhost:4000/users?email='+this.props.email)
@@ -58,6 +76,7 @@ console.log("this.props.email",this.email)
                 console.log(error)
             })
 }
+
 
 
 sendCompleteProduct=()=>{
@@ -84,13 +103,41 @@ sendCompleteProduct=()=>{
     return (
 
              <PaymentDiv ImagePath={this.props.ImagePath}>
+               <p>For any payment related queries Contact  -  8007646656</p>
+               <br/>
+              <p> Do you want us to Deliver      
+              <button
+                  onClick={this.handleDelivery}
+                    >Yes</button>
+                    &nbsp;&nbsp;&nbsp;
+
+                    <button>No</button>
+                    </p>
+                    <br/>
+              {this.state.yes ? 
+              <div className="form-group mx-sm-4 mb-4">
+              <label>Enter complete address if you want delivery : </label>
+              <input
+                type="text"
+                className="form-control"
+                value={this.state.completeAddress}
+                onChange={this.onChangeContact}
+                placeholder="Your Complete address with pin code"
+                required
+              />
+            </div>:null}
+               
              <label>Please transfer ₹{this.price} to account </label>
-            <div>1065046656851</div>
+             <div>Name  :  A7 Enterprises</div>
+            <div>Acc. number - 186805001100</div>
+            <div>ICICI bank bodhule nagar branch ,IFSC CODE - ICIC0001868</div>
             <div>OR</div>
+            <div>Else pay Using Google Pay /Paytm / PhonePE scan and Proceed</div>
+            <div> <img src="img/PaymentQR.jpg" className="img-fluid" alt="" /></div>
             <p>
               Click on this button after completing payment
             </p>
-            <button className="btn btn-outline-danger text-uppercase mb-3 px-5"
+            <button
                   onClick={this.sendCompleteProduct}
                     >Click After Payment</button>
          </PaymentDiv> 

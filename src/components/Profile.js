@@ -24,7 +24,7 @@ export default class Profile extends React.Component {
     return (
       <div>
         {/* <Button color="danger" onClick={this.toggle}>{this.props.buttonLabel}</Button> */}
-        <Modal isOpen={modal} toggle={this.props.toggle} className={this.props.className}>
+        <Modal isOpen={modal} toggle={this.props.toggle}>
           <ModalHeader toggle={this.props.toggle}>Profile</ModalHeader>
             {isRegistered?
           <ModalBody>

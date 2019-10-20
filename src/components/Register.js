@@ -1,13 +1,17 @@
 import React, { Component } from "react";
 import axios from "axios";
 import { ProductConsumer } from "../context";
-import validator from "validator";
 import styled from "styled-components";
+import validator from "validator";
+
 
 const Wrapper = styled.div`
 	transform: translate(0%, 2%);
 	padding: 0 20rem;
 	background-image: url(${props => props.ImagePath});
+	@media (max-width: 576px) {
+		width:1170px;
+	  } 
 `;
 
 export default class Register extends Component {
@@ -37,7 +41,7 @@ export default class Register extends Component {
 	onChangeContact(e) {
 		this.setState({
 			contact: e.target.value
-		});
+		}, () => { console.log("this.state.contact", this.state.contact) });
 	}
 
 	onChangeLocation(e) {
@@ -53,22 +57,27 @@ export default class Register extends Component {
 	}
 
 	setUser() {
-		console.log(`Form submitted:`);
-		if (validator.isEmail(this.props.email)) {
-			console.log("There inside if", validator.isEmail(this.props.email));
-			this.setState({
-				emailIsValid: true
-			});
-		} else {
-			alert("Email you entered is Invalid");
-		}
+		console.log("this.state.contact22222222", this.state.contact, this.state.location)
+		
 		if (validator.isAlpha(this.props.name)) {
-			this.setState({
-				nameIsValid: true
-			});
-		} else {
+			if (validator.isEmail(this.props.email)) {
+				console.log("There inside if", validator.isEmail(this.props.email));
+				this.setState({
+					emailIsValid: true,
+					nameIsValid:true
+				},()=>{this.props.getRegistered(this.state.emailIsValid && this.state.nameIsValid)}
+				);
+				console.log("Registered email flow", this.state.emailId)
+			}
+			else {
+				alert("Email you entered is Invalid");
+			}
+		}
+		else {
 			alert("Name you want is Unavailable");
 		}
+
+		
 		const newCustomer = {
 			name: this.props.name,
 			email: this.props.email,
@@ -77,14 +86,14 @@ export default class Register extends Component {
 			zipcode: this.state.zipcode,
 			product: []
 		};
+		console.log("new customer prints", newCustomer)
+		console.log(`Form submitted:`);
+		alert("Are you sure .. If all the details are correct press Submit")
+
 		if (this.state.nameIsValid && this.state.emailIsValid) {
-			const { name, email, contact } = this.state;
+
 			axios
-				.post("http://localhost:3002/api/form", {
-					// name,
-					// email,
-					// contact
-				})
+				.post("http://localhost:3002/api/form", newCustomer)
 				.then(response => {
 					console.log("Trying to print ", response);
 				})
@@ -96,16 +105,18 @@ export default class Register extends Component {
 				.post("http://localhost:4000/users", newCustomer)
 				.then(res => console.log(res.data));
 			alert("Registered Successfully");
+
+			this.setState({
+				name: "",
+				emailId: "",
+				contact: "",
+				location: "",
+				zipcode: "",
+				product: []
+			});
 		}
 
-		this.setState({
-			name: "",
-			emailId: "",
-			contact: "",
-			location: "",
-			zipcode: "",
-			product: []
-		});
+
 	}
 
 	render() {
@@ -122,12 +133,13 @@ export default class Register extends Component {
 
 							<form>
 								<div class="form-group mx-sm-4 mb-4 ">
-									<label>Name : </label>
+									<label>UserName : </label>
 									<input
 										type="text"
 										className="form-control"
 										value={value.name}
 										onChange={value.onChangeName}
+										placeholder="Unique Name without space(eg: NamanTiwari)"
 										required
 									/>
 								</div>
@@ -138,6 +150,7 @@ export default class Register extends Component {
 										className="form-control"
 										value={value.emailId}
 										onChange={value.onChangeEmail}
+										placeholder="Valid Email(It will be verified)"
 										required
 									/>
 								</div>
@@ -149,6 +162,8 @@ export default class Register extends Component {
 										className="form-control"
 										value={this.state.contact}
 										onChange={this.onChangeContact}
+										placeholder="Your 10 digit Mobile number"
+										maxLength={10}
 										required
 									/>
 								</div>
@@ -160,6 +175,7 @@ export default class Register extends Component {
 										className="form-control"
 										value={this.state.location}
 										onChange={this.onChangeLocation}
+										placeholder="District"
 										required
 									/>
 								</div>
@@ -170,8 +186,9 @@ export default class Register extends Component {
 										type="number"
 										className="form-control"
 										value={this.state.zipcode}
+										placeholder="(eg: 462042)"
+										maxLength={6}
 										onChange={this.onChangeZipcode}
-										required
 									/>
 								</div>
 								<center>
@@ -184,10 +201,6 @@ export default class Register extends Component {
 											value="Submit"
 											onClick={() => {
 												this.setUser();
-												value.getRegistered(
-													this.state.emailIsValid &&
-														this.state.nameIsValid
-												);
 											}}
 											className="btn btn-primary"
 										/>

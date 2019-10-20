@@ -25,6 +25,7 @@ class App extends Component {
     this.footerRef=React.createRef();
    
   }
+  
 
   render() {
     return (  
@@ -37,19 +38,21 @@ console.log("cart ",value)
           
             return (
               <React.Fragment>     
+                <div>
                  <Navbar isRegistered ={value.isRegistered} name={value.name} footerRef={this.footerRef}/>
               <Switch>
                 <Route path="/"  exact component={ProductList} />
                 <Route path="/details" render={(props) => <Details {...props} newProduct={value.newProduct}/>} />
                 <Route path="/cart" component={Cart} />
-                <Route path="/Register" render={(props)=><Register {...props} isRegistered={value.isRegistered} email={value.emailId} name={value.name} ImagePath={RegisterBg}/>} />
+                <Route path="/Register" render={(props)=><Register {...props} isRegistered={value.isRegistered} getRegistered={value.getRegistered} email={value.emailId} name={value.name} ImagePath={RegisterBg}/>} />
                 <Route path="/payment"  render={(props) => <Payment {...props} cart={cart} total={value.cartSubTotal} email={value.emailId} ImagePath={PaymentBg}/>}/>  
-                <Route path="/Login" render={(props) => <Login {...props} email={value.emailId} ImagePath={LoginBg}/>}/>
+                <Route path="/Login" render={(props) => <Login {...props} email={value.emailId} ImagePath={LoginBg} getRegistered={value.getRegistered} setName={value.setName}/>}/>
                 <Route component={Default} />
               </Switch>
               <Modal isRegistered={value.isRegistered} name={value.name}/>
               <div ref={this.footerRef}>
               <FooterPage/></div>
+              </div>
               </React.Fragment>
             );
           

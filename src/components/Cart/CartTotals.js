@@ -40,7 +40,9 @@ handlePayment() {
       cartTotal,
       cart,
       clearCart,
-      isRegistered
+      isRegistered,
+      discount,
+      emailId
     } = this.props.value;
     const { history } = this.props;
     const emptyCart = cart.length === 0 ? true : false;
@@ -70,6 +72,10 @@ handlePayment() {
                   <strong>₹ {cartTax} </strong>
                 </h5>
                 <h5>
+                  <span className="text-title" style={{color:"blue"}}>(Only ON Cart Value above>5000) Discount Offered  </span>{" "}
+                  <strong>₹ {discount} </strong>
+                </h5>
+                <h5>
                   <span className="text-title"> total :</span>{" "}
                   <strong>₹ {cartTotal} </strong>
                 </h5>
@@ -87,7 +93,8 @@ handlePayment() {
                    <ProceedToPay cart={this.props.value.cart} 
                                  cartTotal={this.props.value.cartTotal} 
                                  clearCart={this.props.value.clearCart}
-                                 isRegistered={this.props.value.isRegistered}/>: null
+                                 isRegistered={this.props.value.isRegistered}
+                                 emailId={emailId}/>: null
                 }
 
                

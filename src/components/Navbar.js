@@ -32,26 +32,19 @@ export default class Navbar extends Component {
     const {name,isRegistered}=this.props;
     return (
       
-      <Nav className="navbar navbar-expand-sm  navbar-dark px-sm-5">
+      <Nav>
            <Logo className="icon"/>
         
-        <ul className="navbar-nav align-items-center">
-          <li className="nav-item ml-5">
+        <div className="Title">
             <Link to="/" className="nav-link">
             <img src="img/LucianPE.png" className="Lucian-img" alt="" />
             </Link>
-          </li>
-        </ul>
+        </div>
 
         {/* { this.props.name.length>0 ?<h4>Hi {this.props.name}  !!!</h4>:null} */}
         <div className="nav-icons">
-        <Link to="/"><button className="nav-btn" value="Home"> 
-         
-                Home
-              </button></Link>
-
-              
-              <button className="nav-btn" value="About" onClick={()=>this.scrollToTopWithCallback()}>
+        <button className="nav-btn" value="Home"><Link to="/">Home</Link></button>
+               <button className="nav-btn" value="About" onClick={()=>this.scrollToTopWithCallback()}>
                 About
                 </button>
               <button className="nav-btn"  value="Profile" onClick={()=>this.toggle()}>
@@ -61,20 +54,29 @@ export default class Navbar extends Component {
               <button className="nav-btn"  onClick={()=>this.scrollToTopWithCallback()}>
                 Contact
               </button>
+
+             
+          <CartButton>
+          <Link to="/cart">
+         
+              <Cart className="carticon"/>
+              <MobSpan className="mob-window">   
+           {"  "} Cart</MobSpan>
+           </Link>
+          </CartButton>
+        
             </div>
 
-        <Link to="/cart" className="ml-auto">
-          <CartButton>
-            <span>
-              <Cart className="carticon"/>
-            </span>
-           {"  "} Cart
-          </CartButton>
-        </Link>
+        
       </Nav>
     );
   }
 }
+const MobSpan=styled.span`
+  @media (max-width: 543px) {
+    // display:none
+  }
+`
 
 const CartButton=styled.button`
 width: 9%;
@@ -82,22 +84,48 @@ border: 2px solid white;
 border-radius: 50px 20px;
 position: absolute;
 right: 1%;
+@media (max-width: 543px) {
+  position:unset;
+  width: 30%;
+  
+}
+.carticon{
+  width:15%;
+  height:2%;
+  @media (max-width: 543px){
+      // width: 50%;
+      // height: 100%;
+}
+}
 }
 `
 
 const Nav = styled.nav`
   background: #3E4095;
   max-height:8em;
+  display:flex;
+  border-bottom: 1px solid darkblue;
+  .Title{
+    list-style-type:none;
+  }
   .nav-link {
     color: var(--mainWhite) !important;
     font-size:1.3rem;
     text-transform:capitalize;
+    
+    .Lucian-img{
+      max-width: 36%;
+      height: auto;
+      margin-left: 20px;
+      @media (max-width: 576px) {
+        // max-width:200px;
+        // margin-left: 0px;
+      }
+    }
   }
   @media (max-width: 576px) {
-    .navbar-nav {
-      flex-direction: row !important;
-`;
-
+    width:1170px;
+  } 
 // const ButtonContainer = styled.button`
 //   text-transform: capitalize;
 // font - size: 1.4rem;

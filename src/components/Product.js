@@ -19,7 +19,7 @@ export default class Product extends Component {
                   <Link to="/details">
                     <img src={img} alt="" className="card-img-top" />
                   
-                  <button
+                  {/* <button
                     className="cart-btn"
                     disabled={inCart ? true : false}
                     onClick={() => {
@@ -35,7 +35,7 @@ export default class Product extends Component {
                     ) : (
                       <i> + Cart</i>
                     )}
-                  </button>
+                  </button> */}
                   </Link>
                 </div>
               );

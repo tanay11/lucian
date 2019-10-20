@@ -12,6 +12,9 @@ background-image: url(${props => props.ImagePath});
 width:100%;
 height:100%;
 padding:11rem;
+@media (max-width: 576px) {
+  width:1170px;
+} 
 `
 export default class Login extends Component {
     email=this.props.email;
@@ -53,17 +56,18 @@ export default class Login extends Component {
   getUser=()=>{
     axios.get('http://localhost:4000/users?email='+this.props.email)
     .then(response => {
+      
+      this.props.getRegistered(true);
         this.setState({
           id:response.data[0].id,
           name:response.data[0].name,
           emailId:response.data[0].emailId,
           contact:response.data[0].contact,
-          location:response.data[0].location,
-          completeAddress:response.data[0].completeAddress,
           zipcode:response.data[0].zipcode,
           product:response.data[0].product,
           user:true
-        });
+        },()=>{
+          this.props.setName(this.state.name)});
 
 
         console.log("Now User ",this.state.name,this.state.user)
@@ -99,8 +103,6 @@ export default class Login extends Component {
                     <div className="form-group">
                         <input type="button"  value="Login" onClick={()=>{
                             this.getUser();
-                            value.getRegistered(this.state.user);
-                            value.setName(this.state.name);
                             this.handleSubmit();
                         }} className="btn btn-primary" />
                         {/* <p>{this.state.name}</p> */}
